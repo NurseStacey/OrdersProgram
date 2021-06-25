@@ -100,7 +100,7 @@ class PresetOrderClass:
 
             nonlocal orderbuttons
             temptext = big_text_box.gettext()
-            temptext = temptext.replace("\n", "")
+            # temptext = temptext.replace("\n", "") Why did I write this?
             thisneworder = OneOrderClass(idvar.get(), temptext)
 
             idvar.set("")

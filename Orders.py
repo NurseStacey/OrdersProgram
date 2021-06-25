@@ -82,7 +82,7 @@ class OrderScreenClass:
         ordersetbutton = tk.Button(presetorders, font=times14, text="Order Sets", command=ordersetpressed)
         ordersetbutton.grid(column=1, row=3, sticky="NEWS")
 
-        entryorders = tk.Text(this_frame, name="entryorders", width=45, height=13)
+        entryorders = tk.Text(this_frame, name="entryorders", width=45, height=13, wrap=tk.WORD)
         entryorders.config(font=times14)
         entryorders.insert(tk.END,  "")
         entryorders.grid(row=thisrow, column=2, sticky="NEWS", columnspan=3)
