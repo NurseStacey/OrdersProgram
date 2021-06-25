@@ -67,18 +67,11 @@ def buildthebaseframe():
     labeltitlebaseframe.config(font=times24)
     labeltitlebaseframe.grid(row=thisrow, column=1, columnspan=3)
 
-#    labelspacer2 = tk.Label(this_frame, text="", font="Times,24", anchor='center', width=75, height=1)
-#    labelspacer2.grid(row=thisrow, column=2, columnspan=5)
-
     thisrow = thisrow + 1
-#    labelcensus = tk.Label(this_frame, text="Census", font="Times,12", justify='left', height=1)
-#    labelcensus.grid(row=thisrow, column=2, sticky='w')
 
     labbutton = tk.Button(this_frame, font=buttonfont, text="Add Labs", command=labbuttonpressed)
     labbutton.grid(row=thisrow, column=3, sticky='news')
 
-
-#    buttonpatientlist = tk.Button(this_frame, text="Load Patient List", height=1, command=loadpatientcensus)
     buttonpatientlist = tk.Button(this_frame, text="Load Patient List", height=1)
     buttonpatientlist.config(command=loadpatientlistframe)
     buttonpatientlist.config(font=buttonfont)

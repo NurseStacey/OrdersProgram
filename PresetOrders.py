@@ -5,15 +5,15 @@ from tkinter import font as tkfont
 from Misc import TextScrollCombo
 import pickle
 
-BUILDINGLABTEXT = 0
-MAKINGNEWPRESETLAB = 1
+# BUILDINGLABTEXT = 0
+# MAKINGNEWPRESETLAB = 1
 
 
 class OneOrderClass:
-    def __init__(self, the_id, thelabel):
+    def __init__(self, the_id, thetext):
 
         self.thelabel = the_id
-        self.thetext = thelabel
+        self.thetext = thetext
 
 #   One class that will  be used three times for all the preset orders
 

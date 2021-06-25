@@ -35,33 +35,36 @@ class DisplayCensusClass:
             census_name_entry.delete(0, tk.END)
             self.window.nametowidget("base_frame").tkraise()
 
-        def save():
-            name = census_name_entry.get()
-            nonlocal this_census
-            entries = os.listdir()
-            continue_this = True
-
-            for filename in entries:
-                if filename == (name + ".csv"):
-                    question = name + " already exits.  Overwrite?"
-                    confirmation = tk.messagebox.askquestion("Overwrite", question, icon="warning")
-                    continue_this = (confirmation == 'yes')
-
-            if continue_this:
-                this_census.CensusName = name
-                this_census.savecensus()
-
-                displaycensusframe = self.window.nametowidget("display_census")
-                listboxcensus = displaycensusframe.nametowidget("listboxcensus")
-
-                for index, one_patient in enumerate(self.patient_obj):
-                    listboxcensus.addpatient(one_patient, index)
-                cancel()
+        # def save():
+        #     name = census_name_entry.get()
+        #
+        #     nonlocal this_census
+        #     entries = os.listdir()
+        #     continue_this = True
+        #
+        #     for filename in entries:
+        #         if filename == (name + ".csv"):
+        #             question = name + " already exits.  Overwrite?"
+        #             confirmation = tk.messagebox.askquestion("Overwrite", question, icon="warning")
+        #             continue_this = (confirmation == 'yes')
+        #
+        #     if continue_this:
+        #         this_census.CensusName = name
+        #         this_census.savecensus()
+        #
+        #         displaycensusframe = self.window.nametowidget("display_census")
+        #         listboxcensus = displaycensusframe.nametowidget("listboxcensus")
+        #
+        #         for index, one_patient in enumerate(self.patient_obj):
+        #             listboxcensus.addpatient(one_patient, index)
+        #         cancel()
 
         def prasecensus():
             thetext = census_textbox.gettextaslines()
 
             nonlocal this_census
+            this_census.clearcensus()
+
             badlines = 0
             for oneline in thetext:
 
@@ -108,21 +111,21 @@ class DisplayCensusClass:
         parsing_button = tk.Button(this_frame, anchor="e", text="Parse Data", font=buttonfont, command=prasecensus)
         parsing_button.grid(row=thisrow, column=1, sticky='e')
 
-        save_button = tk.Button(this_frame, text="Save", font=buttonfont, command=save)
-        save_button.grid(row=thisrow, column=3)
-        save_button.config(state="disable")
+        # save_button = tk.Button(this_frame, text="Save", font=buttonfont, command=save)
+        # save_button.grid(row=thisrow, column=3)
+        # save_button.config(state="disable")
 
-        cancel_button = tk.Button(this_frame, anchor="w", text="Done", font=buttonfont, command=cancel)
+        cancel_button = tk.Button(this_frame, anchor="w", text="Cancel", font=buttonfont, command=cancel)
         cancel_button.grid(row=thisrow, column=5, sticky='w')
 
-        thisrow = thisrow + 1
-
-        census_name_lable = tk.Label(this_frame, text="Name of Census", font=buttonfont)
-        census_name_lable.grid(row=thisrow, column=2)
-
-        census_name_entry = tk.Entry(this_frame, width=10, font=buttonfont)
-        census_name_entry.grid(row=thisrow, column=4)
-        census_name_entry.config(state="disable")
+        # thisrow = thisrow + 1
+        #
+        # census_name_lable = tk.Label(this_frame, text="Name of Census", font=buttonfont)
+        # census_name_lable.grid(row=thisrow, column=2)
+        #
+        # census_name_entry = tk.Entry(this_frame, width=10, font=buttonfont)
+        # census_name_entry.grid(row=thisrow, column=4)
+        # census_name_entry.config(state="disable")
 
         thisrow = thisrow + 1
         this_frame.rowconfigure(thisrow, weight=1)
@@ -246,6 +249,10 @@ class DisplayCensusClass:
 
         def savecensus():
             self.patient_obj.CensusName = censusnamevar.get()
+
+            if self.patient_obj.CensusName=='':
+                messagebox.showerror('File Error', 'Need a name for the census')
+                return
 
             self.patient_obj.savecensus()
 
