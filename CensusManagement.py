@@ -118,14 +118,14 @@ class DisplayCensusClass:
         cancel_button = tk.Button(this_frame, anchor="w", text="Cancel", font=buttonfont, command=cancel)
         cancel_button.grid(row=thisrow, column=5, sticky='w')
 
-        # thisrow = thisrow + 1
-        #
-        # census_name_lable = tk.Label(this_frame, text="Name of Census", font=buttonfont)
-        # census_name_lable.grid(row=thisrow, column=2)
-        #
-        # census_name_entry = tk.Entry(this_frame, width=10, font=buttonfont)
-        # census_name_entry.grid(row=thisrow, column=4)
-        # census_name_entry.config(state="disable")
+        thisrow = thisrow + 1
+        
+        census_name_lable = tk.Label(this_frame, text="Name of Census", font=buttonfont)
+        census_name_lable.grid(row=thisrow, column=2)
+        
+        census_name_entry = tk.Entry(this_frame, width=10, font=buttonfont)
+        census_name_entry.grid(row=thisrow, column=4)
+        census_name_entry.config(state="disable")
 
         thisrow = thisrow + 1
         this_frame.rowconfigure(thisrow, weight=1)
@@ -150,9 +150,11 @@ class DisplayCensusClass:
 
     def buildcensuslistnotempty(self):
         this_frame = self.window.nametowidget("patient_census_frame_not_empty")
+        
         times24 = tkfont.Font(family="Times", size=24)
         thisrow = 0
 
+        this_frame.grid(row=0, column=0, sticky='nsew')
         this_frame.rowconfigure(thisrow, weight=1)
         this_frame.columnconfigure(0, weight=1)
         this_frame.columnconfigure(2, weight=1)
@@ -186,7 +188,10 @@ class DisplayCensusClass:
         thisrow = 0
 
         this_frame = self.window.nametowidget("patient_census_frame_empty")
+
         times24 = tkfont.Font(family="Times", size=24)
+
+        this_frame.grid(row=0, column=0, sticky='nsew')
         this_frame.rowconfigure(thisrow, weight=1)
         this_frame.columnconfigure(0, weight=1)
         this_frame.columnconfigure(2, weight=1)
@@ -374,7 +379,7 @@ class DisplayCensusClass:
         deleteordersbutton.config(font=buttonfont)
         deleteordersbutton.grid(row=3, column=2, columnspan=2)
 
-        finishbutton = tk.Button(bottombuttonframe, text="Finish", font=buttonfont, width=15, command=finish)
+        finishbutton = tk.Button(bottombuttonframe, text="Home Screen", font=buttonfont, width=15, command=finish)
         finishbutton.grid(row=3, column=4, sticky="e")
 
         exitprogram = tk.Button(bottombuttonframe, text="Exit Program", font=buttonfont, width=15, command=exitprogram)

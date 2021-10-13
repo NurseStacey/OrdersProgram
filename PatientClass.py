@@ -1,3 +1,5 @@
+import sys
+sys.path.append("C:\\Users\\Stacey WayneM\\Documents\\NurseStaceyCode\\OrdersProgram\\Lib\\site-packages")
 from datetime import datetime
 import os
 from tkinter import font as tkfont
@@ -13,6 +15,88 @@ DOB = 2
 
 
 
+class ProviderFrame(tk.Frame):
+    
+    def __init__(self, this_provider, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        def save_provider():
+            local_provider = ProviderFileClass()
+
+            local_provider.name = name_entry.get()
+            local_provider.dea = self.nametowidget('dea_entry').get()
+            local_provider.title = self.nametowidget('title_entry').get()
+
+            with open("Provider.swm", "wb") as mypicklefile:
+                pickle.dump(local_provider, mypicklefile)
+                mypicklefile.close()
+
+        #    global this_provider
+            this_provider.name = local_provider.name
+            this_provider.dea = local_provider.dea
+            this_provider.title = local_provider.title
+        #    this_provider = local_provider
+            self.winfo_toplevel().nametowidget("base_frame").tkraise()
+
+        def cancel():
+            self.winfo_toplevel().nametowidget("base_frame").tkraise()
+
+        self.grid(row=0, column=0, sticky='nsew')
+
+        self.rowconfigure(0, weight=1)
+
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(0, weight=3)
+
+        times24 = tkfont.Font(family="Times", size=24)
+        times16 = tkfont.Font(family="Times", size=16)
+
+        thisrow = 1
+        # labelspacer1 = tk.Label(self, text="", anchor='center', width=10, height=1)
+        # labelspacer1.grid(row=thisrow, column=1, columnspan=1)
+
+        thisrow = thisrow + 1
+        tk.Label(self, text="Provider Data", font=times24, anchor='center', height=1, width=45
+            ).grid(row=thisrow, column=1, columnspan=3)
+
+        thisrow = thisrow + 1
+        tk.Label(self, padx=100, text="Name:", font=times16, height=1
+            ).grid(row=thisrow, column=1, sticky='w')
+
+        namevar = tk.StringVar(self)
+        namevar.set(this_provider.name)
+        name_entry = tk.Entry(self,  width=30, font=times16, textvariable=namevar)
+        name_entry.config(state="normal")
+
+        name_entry.grid(row=thisrow, column=2)
+
+        thisrow = thisrow + 1
+        tk.Label(self, padx=100, text="DEA #:", font=times16, height=1
+            ).grid(row=thisrow, column=1, sticky='w')
+
+        deavar = tk.StringVar(self, this_provider.dea)
+        tk.Entry(self, width=30, name='dea_entry', font=times16, textvariable=deavar
+            ).grid(row=thisrow, column=2)
+
+        thisrow = thisrow + 1
+        tk.Label(self, padx=100, text="Order sheet title:", font=times16, height=1).grid(row=thisrow, column=1, sticky='w')
+
+        title_var = tk.StringVar(self, this_provider.title)
+        tk.Entry(self, name='title_entry', width=30, font=times16, textvariable=title_var).grid(row=thisrow, column=2)
+
+        thisrow = thisrow + 1
+        tk.Button(self, text="Save",
+                                font=times16, command=save_provider
+                                ).grid(row=thisrow,  column=1)
+
+        tk.Button(
+            self, text="Cancel", font=times16, command=cancel
+            ).grid(row=thisrow,  column=2)
+
+        thisrow = thisrow + 1
+        self.rowconfigure(thisrow, weight=1)
+
+          
 
 class ProviderFileClass:
     def __init__(self):
@@ -22,12 +106,12 @@ class ProviderFileClass:
 
 
 class ProviderClass:
-    def __init__(self, window):
+    def __init__(self):
 
         self.name = ""
         self.dea = ""
         self.title = ""
-        self.window = window
+        self.loadprovider()
 
     def loadprovider(self):
         if os.path.exists("Provider.swm") and os.access("Provider.swm", os.R_OK):
@@ -41,89 +125,6 @@ class ProviderClass:
             return 1
         else:
             return 0
-
-#   This is for any provider data
-#   Frame name is providerframe
-    def buildproviderframe(self):
-        #     global this_provider
-
-        this_frame = self.window.nametowidget("provider_frame")
-
-        this_frame.rowconfigure(0, weight=1)
-
-        this_frame.columnconfigure(0, weight=1)
-        this_frame.columnconfigure(0, weight=3)
-
-        times24 = tkfont.Font(family="Times", size=24)
-        times16 = tkfont.Font(family="Times", size=16)
-
-        thisrow = 1
-        labelspacer1 = tk.Label(this_frame, text="", anchor='center', width=10, height=1)
-        labelspacer1.grid(row=thisrow, column=1, columnspan=1)
-
-        thisrow = thisrow + 1
-        screentitle = tk.Label(this_frame, text="Provider Data", font=times24, anchor='center', height=1, width=45)
-        screentitle.grid(row=thisrow, column=1, columnspan=3)
-
-        thisrow = thisrow + 1
-        name_label = tk.Label(this_frame, padx=100, text="Name:", font=times16, height=1)
-        name_label.grid(row=thisrow, column=1, sticky='w')
-
-        namevar = tk.StringVar(this_frame)
-        namevar.set(self.name)
-        name_entry = tk.Entry(this_frame,  width=30, font=times16, textvariable=namevar)
-        name_entry.config(state="normal")
-
-        name_entry.grid(row=thisrow, column=2)
-
-        thisrow = thisrow + 1
-        name_label = tk.Label(this_frame, padx=100, text="DEA #:", font=times16, height=1)
-        name_label.grid(row=thisrow, column=1, sticky='w')
-
-        deavar = tk.StringVar(this_frame, self.dea)
-        dea_entry = tk.Entry(this_frame, width=30, font=times16, textvariable=deavar)
-        dea_entry.grid(row=thisrow, column=2)
-
-        thisrow = thisrow + 1
-        title_label = tk.Label(this_frame, padx=100, text="Order sheet title:", font=times16, height=1)
-        title_label.grid(row=thisrow, column=1, sticky='w')
-
-        title_var = tk.StringVar(this_frame, self.title)
-        title_entry = tk.Entry(this_frame, width=30, font=times16, textvariable=title_var)
-        title_entry.grid(row=thisrow, column=2)
-
-
-
-        def save_provider():
-            local_provider = ProviderFileClass()
-
-            local_provider.name = name_entry.get()
-            local_provider.dea = dea_entry.get()
-            local_provider.title = title_entry.get()
-
-            with open("Provider.swm", "wb") as mypicklefile:
-                pickle.dump(local_provider, mypicklefile)
-                mypicklefile.close()
-
-        #    global this_provider
-            self.name = local_provider.name
-            self.dea = local_provider.dea
-            self.title = local_provider.title
-        #    this_provider = local_provider
-            self.window.nametowidget("base_frame").tkraise()
-
-        def cancel():
-            self.window.nametowidget("base_frame").tkraise()
-
-        thisrow = thisrow + 1
-        save_button = tk.Button(this_frame, text="Save", font=times16, command=save_provider)
-        save_button.grid(row=thisrow,  column=1)
-
-        cancel_button = tk.Button(this_frame, text="Cancel", font=times16, command=cancel)
-        cancel_button.grid(row=thisrow,  column=2)
-
-        thisrow = thisrow + 1
-        this_frame.rowconfigure(thisrow, weight=1)
 
 class PDF(FPDF):
     def __init__(self, this_provider, *args, **kwargs):
@@ -147,8 +148,6 @@ class PDF(FPDF):
         self.set_y(-60)
         self.cell(20, 10, txt="Provider:", align='L')
 
-        #       ProviderName="Stacey Melnick, ANP"  # eventually this will be uploaded from a file
-        #      ProviderDEA="MM4718839"
         size_one_letter = 6.35  
         # 1 pt is 1/72 inches
         start_position_right = size_one_letter*(5*len(self.this_provider.name))

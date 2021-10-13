@@ -41,6 +41,12 @@ class OrderScreenClass:
         labelroom2 = tk.Label(this_frame, name="ptroomnumberlabel", text="", width=15, font=times14)
         labelroom2.grid(column=4, row=thisrow, stick="NEWS")
 
+        def preset_order_pressed(which):
+            nonlocal this_frame
+            # window.nametowidget(which).setreturnframe(
+            #     window.nametowidget("base_frame"))
+            this_frame.winfo_toplevel().nametowidget(which).tkraise()
+
         def labbuttonpressed():
             self.labobj.setreturnframe(this_frame)
             self.labobj.setparententryorders(entryorders)
@@ -75,11 +81,18 @@ class OrderScreenClass:
         thisrow = thisrow + 1
         presetorders = tk.Frame(this_frame)
         presetorders.grid(column=1, row=thisrow)
-        labbutton = tk.Button(presetorders, font=times14, text="Add Labs", command=labbuttonpressed)
+
+        labbutton = tk.Button(presetorders, font=times14, text="Add Labs",
+                              command=lambda: preset_order_pressed('labs'))
+        # labbutton = tk.Button(presetorders, font=times14, text="Add Labs", command=labbuttonpressed)
         labbutton.grid(column=1, row=1, sticky="NEWS")
-        radbutton = tk.Button(presetorders, font=times14, text="Add Radiology", command=radbuttonpressed)
+        # radbutton = tk.Button(presetorders, font=times14, text="Add Radiology", command=radbuttonpressed)
+        radbutton = tk.Button(presetorders, font=times14,
+                              text="Add Radiology", command=lambda: preset_order_pressed('radiology'))
         radbutton.grid(column=1, row=2, sticky="NEWS")
-        ordersetbutton = tk.Button(presetorders, font=times14, text="Order Sets", command=ordersetpressed)
+#        ordersetbutton = tk.Button(presetorders, font=times14, text="Order Sets", command=ordersetpressed)
+        ordersetbutton = tk.Button(
+            presetorders, font=times14, text="Order Sets", command=lambda: preset_order_pressed('other orders'))
         ordersetbutton.grid(column=1, row=3, sticky="NEWS")
 
         entryorders = tk.Text(this_frame, name="entryorders", width=45, height=13, wrap=tk.WORD)

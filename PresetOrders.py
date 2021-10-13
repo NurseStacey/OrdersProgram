@@ -7,7 +7,7 @@ import pickle
 
 # BUILDINGLABTEXT = 0
 # MAKINGNEWPRESETLAB = 1
-
+Delete_Color = 'red'
 
 class OneOrderClass:
     def __init__(self, the_id, thetext):
@@ -15,29 +15,49 @@ class OneOrderClass:
         self.thelabel = the_id
         self.thetext = thetext
 
+class MyButtonClass(tk.Button):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.default_color = self.cget('bg')
+
 #   One class that will  be used three times for all the preset orders
 
 
-class PresetOrderClass:
-    def __init__(self, thisframe, title):
-        self.thisframe = thisframe
-        self.title = title
+# class PresetOrderClass:
+#     def __init__(self, thisframe, title):
+#         self.thisframe = thisframe
+#         self.title = title
+#         self.theorders = []
+#         self.loadorders()
+#         self.returndestination = thisframe
+#         self.parententryorders = -1
+
+class PresetOrderClass(tk.Frame):
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        #self.thisframe = thisframe
+        self.title = kwargs['name']
         self.theorders = []
         self.loadorders()
-        self.returndestination = thisframe
+        #self.returndestination = thisframe
         self.parententryorders = -1
 
     def setparententryorders(self,parententyroders):
         self.parententryorders = parententyroders
 
-    def setreturnframe(self, fromframe):
-        self.returndestination = fromframe
+    # def setreturnframe(self, fromframe):
+    #     self.returndestination = fromframe
 
-    def testingprocess(self):
+    # def testingprocess(self):
 
-        for index in range(30):
-            temp = OneOrderClass("test" + str(index), "lab" + str(index))
-            self.theorders.append(temp)
+    #     for index in range(30):
+    #         temp = OneOrderClass("test" + str(index), "lab" + str(index))
+    #         self.theorders.append(temp)
 
     def loadorders(self):
         orderfilename = self.title + ".swm"
@@ -61,7 +81,7 @@ class PresetOrderClass:
             nonlocal orderbuttons
             temp = thistxt
 #       this means we need to delete
-            if orderbuttons[index].cget('bg') == 'red':  
+            if orderbuttons[index].cget('bg') == Delete_Color:
 
                 for oneorder in self.theorders:
                     if oneorder.thetext == thistxt:
@@ -81,16 +101,19 @@ class PresetOrderClass:
         def deletesomebutton():
 
             for thisbutton in orderbuttons:
-                thisbutton.configure(bg='red')
+                thisbutton.configure(bg=Delete_Color)
 
         def makeneworderpart1():
             neworderidtext.config(state='normal')
             neworderidlabel.config(state='normal')
             nonlocal the_return_text
             the_return_text = big_text_box.gettext()
-            # the_return_text = the_return_text.replace("\n", "")
-#       not sure why I need to do this
-            big_text_box.cleartext()
+
+            if not the_return_text == '':
+                msgbox = tk.messagebox.askquestion('Use existing text', 'There is already text in the box, would you like to keep it here?')
+                if msgbox == 'no':
+                    big_text_box.cleartext()
+            
             cancelbutton.config(command=cancelmakeneworder)
             neworderbutton.config(command=makeneworderpart2)
             for thisbutton in orderbuttons:
@@ -99,6 +122,9 @@ class PresetOrderClass:
         def makeneworderpart2():
 
             nonlocal orderbuttons
+            nonlocal new_orders_need_to_save
+
+            
             temptext = big_text_box.gettext()
             # temptext = temptext.replace("\n", "") Why did I write this?
             thisneworder = OneOrderClass(idvar.get(), temptext)
@@ -109,6 +135,7 @@ class PresetOrderClass:
                 error_txt = "We need both a label for the button and text for the lab.\n They may be the same"
                 messagebox.showinfo("Error", error_txt)
             else:
+                new_orders_need_to_save = True
                 self.theorders.append(thisneworder)
                 neworderbutton.config(command=makeneworderpart1)
                 cancelbutton.config(command=cancel)
@@ -122,8 +149,14 @@ class PresetOrderClass:
                 neworderidlabel.config(state='disable')
 
 #              not sure if I need to delete all the widgets before leaving
-        def cancel():  
-            self.returndestination.tkraise()
+        def cancel(): 
+            leaving()
+
+        def reset_button_color():
+
+            for thisbutton in orderbuttons:
+                thisbutton.config(bg=thisbutton.default_color)
+                thisbutton.config(state='normal')
 
         def cancelmakeneworder():
             neworderidtext.config(state='disable')
@@ -143,6 +176,7 @@ class PresetOrderClass:
             #          with open(orderfilename, "wb") as mypicklefile:
             #              pickle.dump(self.theorders, mypicklefile)
             outputfile.close()
+            new_orders_need_to_save = False
 
         def buildorderbutton():  
             # these are for the actual orders
@@ -170,7 +204,9 @@ class PresetOrderClass:
 
                 #onebutton = tk.Button(buttonframe2, text=oneorder.thelabel, image=pixelvirtual, width=80, height=40)
                 whichframe = orderbuttonframes[math.floor(index/25)]
-                onebutton = tk.Button(whichframe, text=oneorder.thelabel, image=pixelvirtual, width=80, height=40)
+                #onebutton = tk.Button(whichframe, text=oneorder.thelabel, image=pixelvirtual, width=80, height=40)
+                onebutton = MyButtonClass(
+                    whichframe, text=oneorder.thelabel, image=pixelvirtual, width=80, height=40)
 
                 onebutton.config(compound='c')
 
@@ -206,7 +242,22 @@ class PresetOrderClass:
                 self.parententryorders.insert(tk.END, the_return_text)
 
             big_text_box.cleartext()
-            self.returndestination.tkraise()
+
+            leaving()
+
+        def leaving():
+            idvar.set("")
+            neworderidtext.config(state='disable')
+            neworderidlabel.config(state='disable')
+
+            reset_button_color()
+            if new_orders_need_to_save:
+                msg = tk.messagebox.askquestion(
+                    'Save First', 'There are unsaved orders.  Would you like to save them first?')
+                if msg == 'yes':
+                    saveorders()
+
+            self.lower()
 
         def makeoneline():
             temp = big_text_box.gettext()
@@ -223,9 +274,11 @@ class PresetOrderClass:
                 whichorderbuttonframe = 0
             orderbuttonframes[whichorderbuttonframe].tkraise()
 
+        new_orders_need_to_save = False
 
+        self.grid(row=0, column=0, sticky='nsew')
         #this pixelvirtual needs to be defined outside the function building the buttons
-        #otherwise I can't reconfigure the buttons after the facte
+        #otherwise I can't reconfigure the buttons after the fact
         pixelvirtual = tk.PhotoImage(width=1, height=1)
 
         the_return_text = ""
@@ -235,11 +288,10 @@ class PresetOrderClass:
         times9 = tkfont.Font(family="Times", size=9)
         thisrow = 1
 
-        labeltitle = tk.Label(self.thisframe, text=self.title, width=45, height=2, font=times24)
-        labeltitle.grid(column=1, row=thisrow, stick="NEWS")
+        tk.Label(self, text=self.title, width=45, height=2, font=times24).grid(column=1, row=thisrow, stick="NEWS")
 
         thisrow = thisrow + 1
-        neworderlableframe = tk.Frame(self.thisframe, height=20, width=100)
+        neworderlableframe = tk.Frame(self, height=20, width=100)
         neworderlableframe.grid(column=1, row=thisrow)
         neworderidlabel = tk.Label(neworderlableframe, text="Label")
         neworderidlabel.grid(column=1, row=1)
@@ -254,13 +306,13 @@ class PresetOrderClass:
 
         thisrow = thisrow + 1
         #    EntryOrders = tk.Text(self.thisframe, width=45, height=1)
-        big_text_box = TextScrollCombo(self.thisframe)
+        big_text_box = TextScrollCombo(self)
 
         big_text_box.grid(column=1, row=thisrow)
         big_text_box.config(width=600, height=50)
 
         thisrow = thisrow + 1
-        buttonframe1 = tk.Frame(self.thisframe, height=20, width=100)
+        buttonframe1 = tk.Frame(self, height=20, width=100)
         #   this will have control buttons
         buttonframe1.grid(column=1, row=thisrow)
 
@@ -269,12 +321,12 @@ class PresetOrderClass:
         orderbuttonframes = []
         whichorderbuttonframe = 0
 
-        buttonframe2 = tk.Frame(self.thisframe, height=20, width=200)
+        buttonframe2 = tk.Frame(self, height=20, width=200)
         #   this will have all the orders
         buttonframe2.grid(column=1, row=thisrow)
 
         thisrow = thisrow + 1
-        nextorderframebuttons = tk.Button(self.thisframe, text="Next set of orders", command=nextorderbuttonframe)
+        nextorderframebuttons = tk.Button(self, text="Next set of orders", command=nextorderbuttonframe)
         nextorderframebuttons.grid(column=1, row=thisrow)
 
         orderbuttons = []
