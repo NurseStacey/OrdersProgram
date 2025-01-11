@@ -269,8 +269,8 @@ class PatientClass:
 
         onepatient = OnePatientClass()
         onepatient.parseoneline(oneline)
-
-        self.ThePatients.append(onepatient)
+        if not onepatient.name=='':
+            self.ThePatients.append(onepatient)
 
     def resetnextsort(self, which):
 

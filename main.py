@@ -29,20 +29,6 @@ def buildthebaseframe():
         #     window.nametowidget("base_frame"))
         window.nametowidget(which).tkraise()
 
-    # def radbuttonpressed():
-    #     #theradiologyobj.setreturnframe(window.nametowidget("base_frame"))
-    #     radiologyframe.setreturnframe(window.nametowidget("base_frame"))
-    #     window.nametowidget("radiology_frame").tkraise()
-
-    # def otherordersbuttonpressed():
-    #     otherorderframe.setreturnframe(window.nametowidget("base_frame"))
-    #     #theotherodersobj.setreturnframe(window.nametowidget("base_frame"))
-    #     window.nametowidget("other_order_frame").tkraise()
-
-    # def labbuttonpressed():
-    #     labframe.setreturnframe(window.nametowidget("base_frame"))
-    #     #thelabObj.setreturnframe(window.nametowidget("base_frame"))
-    #     window.nametowidget("lab_frame").tkraise()
 
     def open_provider_frame():
         window.nametowidget("provider_frame").tkraise()
@@ -74,10 +60,7 @@ def buildthebaseframe():
 
     title_txt = program_name + " - The Program for Writing Orders"
 
-    #is it right to have a variable for each of these?
     tk.Label(this_frame, text=title_txt, font=times24).grid(row=thisrow, column=1, columnspan=3)
-    # labeltitlebaseframe.config()
-    # labeltitlebaseframe
 
     thisrow = thisrow + 1
     
